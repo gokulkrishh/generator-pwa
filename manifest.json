@@ -22,7 +22,7 @@
   }],
   "start_url": "/index.html?hs=1",
   "theme_color": "#a040a0",
-  "background_color": "#EEEEEE" <% if (gcmSenderId) { %>,
-  "gcm_sender_id": "<%= gcmSenderId %>" <% } if (gcmSenderId) { %>,
-  "gcm_user_visible_only": true <% } %>
+  "background_color": "#EEEEEE" ,
+  "gcm_sender_id": "123123" ,
+  "gcm_user_visible_only": true 
 }

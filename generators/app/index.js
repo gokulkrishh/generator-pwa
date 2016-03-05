@@ -12,22 +12,59 @@ module.exports = yeoman.generators.Base.extend({
       'Welcome to the peachy ' + chalk.red('Progresssive Web App') + ' generator!'
     ));
 
-    done();
+    //No prompts as of now.
+    var prompts = [{
+      type: 'confirm',
+      name: 'pushNotification',
+      message: 'Would you like to add push notification ?',
+      default: true
+    },
+    {
+      type: 'input',
+      name: 'apiKey',
+      message: 'Enter push notification API key',
+      validate: function (apiKey) {
+        if (apiKey) {
+          return true
+        }
+        else {
+          return chalk.yellow('API key is required');
+        }
 
-    // No prompts as of now.
-    // var prompts = [{
-    //   type: 'confirm',
-    //   name: 'someOption',
-    //   message: 'Would you like to enable this option?',
-    //   default: true
-    // }];
+      },
+      when: function (answers) {
+        return answers.pushNotification;
+      }
+    },
+    {
+      type: 'input',
+      name: 'gcmSenderId',
+      message: 'Enter GCM sender id',
+      validate: function (apiKey) {
+        if (apiKey) {
+          return true
+        }
+        else {
+          return chalk.yellow('GCM sender id is required');
+        }
 
-    // this.prompt(prompts, function (props) {
-    //   this.props = props;
-    //   // To access props later use this.props.someOption;
+      },
+      when: function (answers) {
+        return answers.pushNotification;
+      }
+    }];
 
-    //   done();
-    // }.bind(this));
+    this.prompt(prompts, function (props) {
+      this.props = props;
+      console.log('props --->', props);
+
+      if (this.props.pushNotification) {
+        console.log(this.props.apiKey);
+        this.apiKey = this.props.apiKey;
+      }
+      // To access props later use this.props.someOption;
+      done();
+    }.bind(this));
   },
 
   writing: function () {
@@ -39,9 +76,10 @@ module.exports = yeoman.generators.Base.extend({
       this.templatePath('images'),
       this.destinationPath('images')
     );
-    this.fs.copy(
-      this.templatePath('js'),
-      this.destinationPath('js')
+    this.fs.copyTpl(
+      this.templatePath('js/app.js'),
+      this.destinationPath('js/app.js'),
+      { pushNotification: this.props.pushNotification }
     );
     this.fs.copy(
       this.templatePath('favicon.ico'),
@@ -59,18 +97,30 @@ module.exports = yeoman.generators.Base.extend({
       this.templatePath('sw-cache-polyfill.js'),
       this.destinationPath('sw-cache-polyfill.js')
     );
-    this.fs.copy(
+    this.fs.copyTpl(
       this.templatePath('manifest.json'),
-      this.destinationPath('manifest.json')
+      this.destinationPath('manifest.json'),
+      { gcmSenderId: this.props.gcmSenderId }
     );
     this.fs.copy(
       this.templatePath('package.json'),
       this.destinationPath('package.json')
     );
-    this.fs.copy(
-      this.templatePath('server.js'),
-      this.destinationPath('server.js')
-    );
+
+    //If push notifications is prompted
+    if (this.props.pushNotification) {
+      this.fs.copyTpl(
+        this.templatePath('server.js'),
+        this.destinationPath('server.js'),
+        { apiKey: this.props.apiKey }
+      );
+
+      this.fs.copyTpl(
+        this.templatePath('js/push.js'),
+        this.destinationPath('js/push.js'),
+        { apiKey: this.props.apiKey }
+      );
+    }
   },
 
   install: function () {
