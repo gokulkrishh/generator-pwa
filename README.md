@@ -30,7 +30,9 @@ This would generate a dir structure like:
 |____index.html
 |____js
 | |____app.js
+| |____push.js
 |____sw-cache-polyfill.js
+|____server.js
 |____sw.js
 ```
 
