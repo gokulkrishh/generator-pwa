@@ -39,6 +39,12 @@ This would generate a dir structure like:
 ## Run
 
 ```bash
+  gulp
+```
+
+*For push notification*
+
+```bash
   npm start
 ```
 
