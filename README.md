@@ -17,7 +17,7 @@ yo pwa
 This would generate a dir structure like:
 
 ```sh
-.
+app/
 |____css
 | |____style.css
 |____favicon.ico
@@ -31,7 +31,6 @@ This would generate a dir structure like:
 |____js
 | |____app.js
 | |____push.js
-|____sw-cache-polyfill.js
 |____server.js
 |____sw.js
 ```
