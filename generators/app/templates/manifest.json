@@ -1,7 +1,7 @@
 
 {
-  "short_name": "PWA",
-  "name": "Progressie WebApp",
+  "short_name": "<%= appName %>",
+  "name": "<%= appName %>",
   "display": "standalone",
   "icons": [{
         "src": "images/touch/icon-128x128.png",

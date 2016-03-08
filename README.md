@@ -44,13 +44,11 @@ This would generate a dir structure like:
 
 ##TODO
 
-- [ ] - Add push notification and background sync.
-
 - [ ] - Prompt for all `manifest.json` related fields.
 
 - [ ] - AskFor static-cache-path (automatically pick the required files).
 
-- [ ] - Use `serviceworker-cache-polyfill` from npm instead.
+- [x] - Use `serviceworker-cache-polyfill` from npm instead.
 
 - [ ] - Use `async-await` in `sw.js`.
 
@@ -60,7 +58,7 @@ This would generate a dir structure like:
 
 - [ ] - Add background sync.
 
-- [ ] - Work on a build system, `npm-script` or `gulp`.
+- [x] - Work on a build system, `npm-script` or `gulp`.
 
 - [ ] - Add a gif!
 

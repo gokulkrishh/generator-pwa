@@ -37,7 +37,7 @@ module.exports = yeoman.generators.Base.extend({
     },
     {
       type: 'confirm',
-      name: 'pushNotification',
+      name: 'isPush',
       message: 'Would you like to add push notification?',
       default: true
     },
@@ -55,7 +55,7 @@ module.exports = yeoman.generators.Base.extend({
 
       },
       when: function (answers) {
-        return answers.pushNotification;
+        return answers.isPush;
       }
     },
     {
@@ -72,62 +72,72 @@ module.exports = yeoman.generators.Base.extend({
 
       },
       when: function (answers) {
-        return answers.pushNotification;
+        return answers.isPush;
       }
     }];
 
     this.prompt(prompts, function (props) {
       this.props = props;
-
       this.appName = _.camelize(_.slugify(_.humanize(props.appName)));
-
-      // To access props later use this.props.someOption;
       done();
     }.bind(this));
   },
 
   writing: function () {
+
+    this.log(
+      chalk.yellow('\n┌──────────────────────────────────────────────────────────────┐ \n' +
+                     '| Creating the project structure                               | \n' +
+                     '└──────────────────────────────────────────────────────────────┘ ')
+    );
+
     this.fs.copy(
       this.templatePath('css'),
-      this.destinationPath(this.appName + '/css')
+      this.destinationPath(this.appName + '/app/css')
     );
     this.fs.copy(
       this.templatePath('images'),
-      this.destinationPath(this.appName + '/images')
+      this.destinationPath(this.appName + '/app/images')
     );
     this.fs.copyTpl(
       this.templatePath('js/app.js'),
-      this.destinationPath(this.appName + '/js/app.js'),
-      { pushNotification: this.props.pushNotification }
+      this.destinationPath(this.appName + '/app/js/app.js'),
+      { isPush: this.props.isPush }
     );
     this.fs.copy(
       this.templatePath('favicon.ico'),
-      this.destinationPath(this.appName + '/favicon')
+      this.destinationPath(this.appName + '/app/favicon.ico')
     );
-    this.fs.copy(
+    this.fs.copyTpl(
       this.templatePath('index.html'),
-      this.destinationPath(this.appName + '/index.html')
+      this.destinationPath(this.appName + '/app/index.html'),
+      { isPush: this.props.isPush, appName: this.appName }
     );
     this.fs.copy(
       this.templatePath('sw.js'),
-      this.destinationPath(this.appName + '/sw.js')
-    );
-    this.fs.copy(
-      this.templatePath('sw-cache-polyfill.js'),
-      this.destinationPath(this.appName + '/sw-cache-polyfill.js')
+      this.destinationPath(this.appName + '/app/sw.js')
     );
     this.fs.copyTpl(
       this.templatePath('manifest.json'),
-      this.destinationPath(this.appName + '/manifest.json'),
-      { gcmSenderId: this.props.gcmSenderId }
+      this.destinationPath(this.appName + '/app/manifest.json'),
+      { gcmSenderId: this.props.gcmSenderId, appName: this.appName }
+    );
+    this.fs.copyTpl(
+      this.templatePath('package.json'),
+      this.destinationPath(this.appName + '/package.json'),
+      { appName: this.appName }
     );
     this.fs.copy(
-      this.templatePath('package.json'),
-      this.destinationPath(this.appName + '/package.json')
+      this.templatePath('gitignore'),
+      this.destinationPath(this.appName + '/.gitignore')
+    );
+    this.fs.copy(
+      this.templatePath('gulpfile.js'),
+      this.destinationPath(this.appName + '/gulpfile.js')
     );
 
     //If push notifications is prompted
-    if (this.props.pushNotification) {
+    if (this.props.isPush) {
       this.fs.copyTpl(
         this.templatePath('server.js'),
         this.destinationPath(this.appName + '/server.js'),
@@ -136,7 +146,7 @@ module.exports = yeoman.generators.Base.extend({
 
       this.fs.copyTpl(
         this.templatePath('js/push.js'),
-        this.destinationPath(this.appName + '/js/push.js'),
+        this.destinationPath(this.appName + '/app/js/push.js'),
         { apiKey: this.props.apiKey }
       );
     }

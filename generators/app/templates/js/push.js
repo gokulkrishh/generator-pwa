@@ -1,14 +1,14 @@
 //Push notification button
-var btn = document.getElementById('turn-on-notification');
+const btn = document.getElementById('turn-on-notification');
 
 //Tokens
-var apiKey = '<%= apiKey %>'; //API key
-var gcmURL = 'https://android.googleapis.com/gcm/send';
+const apiKey = 'AIzaSyCjrU5SqotSg2ybDLK_7rMMt9Rv0dMusvY'; //API key
+const gcmURL = 'https://android.googleapis.com/gcm/send';
 
 //To check push notification support
 function isPushNotification(reg) {
   reg.pushManager.getSubscription()
-  .then(function (subscription) {
+  .then((subscription) => {
     console.log('Push Notification Status: ', subscription);
     //If already access granted, change status
     if (subscription) {
@@ -18,7 +18,7 @@ function isPushNotification(reg) {
       changeStatus(false);
     }
   })
-  .catch(function (error) {
+  .catch((error) => {
     console.error(error);
   });
 }
@@ -26,7 +26,7 @@ function isPushNotification(reg) {
 //To subscript push notification
 function subscribe() {
   navigator.serviceWorker.ready
-  .then(function(registration) {
+  .then((registration) => {
     if (!registration.pushManager) {
       alert('Your browser doesn\'t support push notifications');
       return;
@@ -35,11 +35,11 @@ function subscribe() {
     registration.pushManager.subscribe({
       userVisibleOnly: true //To always show notification when received
     })
-    .then(function (subscription) {
+    .then((subscription) => {
       console.log('Successfully subscribed: ', subscription);
       changeStatus(true);
     })
-    .catch(function (error) {
+    .catch((error) => {
       console.error(error);
     })
   })
@@ -48,9 +48,9 @@ function subscribe() {
 //To unsubscribe push notification
 function unsubscribe() {
   navigator.serviceWorker.ready
-  .then(function(registration) {
+  .then((registration) => {
     registration.pushManager.getSubscription()
-    .then(function (subscription) {
+    .then((subscription) => {
       //If not push subscription, then return
       if(!subscription) {
         console.error('Unable to unregister from push notification');
@@ -59,15 +59,15 @@ function unsubscribe() {
 
       //Unsubscribe
       subscription.unsubscribe()
-        .then(function () {
+        .then(() => {
           console.log('Successfully unsubscribed');
           changeStatus(false);
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.error(error);
         });
     })
-    .catch(function (error) {
+    .catch((error) => {
       console.error('Failed to unsubscribe push notification');
     });
   })
@@ -75,8 +75,8 @@ function unsubscribe() {
 
 
 //To send push notification
-var pushBtn = document.getElementById('send-push');
-pushBtn.addEventListener('click', function () {
+const pushBtn = document.getElementById('send-push');
+pushBtn.addEventListener('click', () => {
   sendPushNotification();
 });
 
@@ -93,7 +93,7 @@ function changeStatus(status) {
 }
 
 //Click event for subscribe btn
-btn.addEventListener('click', function () {
+btn.addEventListener('click', () => {
   var isBtnChecked = (btn.dataset.checked === 'true');
   if (isBtnChecked) {
     unsubscribe();
@@ -115,9 +115,9 @@ function curlCommand(subscription) {
 //Form data with info to send to server
 function sendPushNotification(subscription) {
   navigator.serviceWorker.ready
-    .then(function(registration) {
+    .then((registration) => {
       registration.pushManager.getSubscription()
-      .then(function (subscription) {
+      .then((subscription) => {
         curlCommand(subscription); //To log curl command in console
         fetch('/send_notification', {
           method: 'post',
@@ -127,10 +127,10 @@ function sendPushNotification(subscription) {
           },
           body: JSON.stringify(subscription)
         })
-        .then(function(response) {
+        .then((response) => {
           return response.json();
         })
-        .then(function(data) {
+        .then((data) => {
           console.error('data', data);
         })
       })

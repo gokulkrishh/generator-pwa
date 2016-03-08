@@ -1,25 +1,22 @@
 if ('serviceWorker' in navigator) {
-	navigator.serviceWorker.register('/sw.js', { scope: '/' }).then(function(reg) {
-
-		if(reg.installing) {
+	navigator.serviceWorker.register('../sw.js', { scope: '/' }).then((reg) => {
+		if (reg.installing) {
 			console.log('Service worker installing');
 		} else if(reg.waiting) {
 			console.log('Service worker installed');
 		} else if(reg.active) {
 			console.log('Service worker active');
 		}
-		<% if (pushNotification) { %>
-		// To check push is supported and enabled
-		isPushNotification(reg);
+		<% if (isPush) { %>
+		isPushNotification(reg); // Check push is supported and enabled already
 		<% } %>
-	}).catch(function(error) {
-		// registration failed
-		console.log('Registration failed with ' + error);
+	}).catch((error) => {
+		console.log('Registration failed with ' + error); // Registration failed
 	});
 
   // Communicate with the service worker using MessageChannel API.
   function sendMessage(message) {
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       const messageChannel = new MessageChannel();
       messageChannel.port1.onmessage = function(event) {
         resolve(`Direct message from SW: ${event.data}`);
